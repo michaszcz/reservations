@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <section class="mb-4">
+        <h1>Moje wydarzenia</h1>
+        <table class="table">
+            <tr>
+                <th>Tytuł</th>
+                <th>Czas rozpoczęcia</th>
+                <th>Czas zakończenia</th>
+                <th>Ilość miejsc</th>
+                <th>Edytuj</th>
+                <th>Usuń</th>
+            </tr>
+            {% for event in events %}
+                <tr>
+                    <td><a href="{{ url_for('event', event_id=event[0]) }}">{{ event[1] }}</a></td>
+                    <td>{{ event[2] }}</td>
+                    <td>{{ event[3] }}</td>
+                    <td>{{ event[4] }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_event', event_id=event[0]) }}"
+                           class="btn btn-sm btn-outline-info"
+                           role="button">Edytuj</a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('delete_event', event_id=event[0]) }}"
+                           class="btn btn-sm btn-outline-info delete-action"
+                           role="button">Usuń</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </section>
+{% endblock %}

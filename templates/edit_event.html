@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <header>
+        <h1 class="h3 mb-3 font-weight-normal" style="display:inline">Edytuj wydarzenie</h1>
+        <span class="buttons-right">
+        <a href="{{ url_for('event', event_id=event.id) }}"
+           class="btn btn-sm btn-outline-info"
+           role="button">Powrót</a>
+        </span>
+    </header>
+    <form method="post" action="" novalidate> {# todo novalidate #}
+        {% from "_formhelpers.html" import render_field %}
+
+        {{ form.csrf_token }}
+        {{ render_field(form.title) }}
+        {{ render_field(form.description) }}
+        {{ render_field(form.place) }}
+        {{ render_field(form.start_timestamp) }}
+        {{ render_field(form.end_timestamp) }}
+        {{ render_field(form.capacity) }}
+
+        <button type="submit" class="btn btn-primary">Wyślij</button>
+    </form>
+{% endblock %}

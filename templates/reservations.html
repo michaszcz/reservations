@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <section class="rwd-table mb-4">
+        <h1>Moje rezerwacje</h1>
+        <table class="table">
+            <tr>
+                <th>Tytuł</th>
+                <th>Organizator</th>
+                <th>Ilość miejsc</th>
+                <th>Usuń rezerwację</th>
+            </tr>
+            {% for reservation in reservations %}
+                <tr>
+                    <td><a href="{{ url_for('event', event_id=reservation[1]) }}">{{ reservation[2] }}</a></td>
+                    <td>{{ reservation[3] }}</td>
+                    <td>{{ reservation[4] }}</td>
+                    <td>
+                        <a href="{{ url_for('delete_reservation', reservation_id=reservation[0]) }}?next={{ url_for('reservations') }}"
+                           class="btn btn-sm btn-outline-info delete-action"
+                           role="button">Usuń</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <section class="rwd-table mb-4">
+        <h1>Miejsca w kolejce</h1>
+        <table class="table">
+            <tr>
+                <th>Tytuł</th>
+                <th>Organizator</th>
+                <th>Ilość miejsc</th>
+                <th>Miejsce w kolejce</th>
+                <th>Usuń rezerwację</th>
+            </tr>
+            {% for reservation in queue %}
+                <tr>
+                    <td><a href="{{ url_for('event', event_id=reservation[1]) }}">{{ reservation[2] }}</a></td>
+                    <td>{{ reservation[3] }}</td>
+                    <td>{{ reservation[4] }}</td>
+                    <td>{{ reservation[5] }}</td>
+                    <td>
+                        <a href="{{ url_for('delete_reservation_queue', reservation_id=reservation[0]) }}?next={{ url_for('reservations') }}"
+                           class="btn btn-sm btn-outline-info delete-action"
+                           role="button">Usuń</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+{% endblock %}

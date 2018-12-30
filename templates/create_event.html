@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <form class="form-registration" method="post" action="" novalidate> {# todo novalidate #}
+        {% from "_formhelpers.html" import render_field %}
+        <h1 class="h3 mb-3 font-weight-normal">Stwórz nowe wydarzenie</h1>
+
+        {{ form.csrf_token }}
+        {{ render_field(form.title) }}
+        {{ render_field(form.description) }}
+        {{ render_field(form.place) }}
+        {{ render_field(form.start_timestamp) }}
+        {{ render_field(form.end_timestamp) }}
+        {{ render_field(form.capacity) }}
+
+        <button type="submit" class="btn btn-primary">Wyślij</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ url_for('index') }}">System rezerwacji wydarzeń</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top-menu"
+            aria-controls="top-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="top-menu">
+        <ul class="navbar-nav mr-auto">
+            {% if session['uid'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('reservations') }}">Rezerwacje</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="events" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Wydarzenia</a>
+                    <div class="dropdown-menu" aria-labelledby="events">
+                        <a class="dropdown-item" href="{{ url_for('create_event') }}">Stwórz nowe wydarzenie</a>
+                        <a class="dropdown-item" href="{{ url_for('my_events') }}">Moje wydarzenia</a>
+                        <a class="dropdown-item" href="{{ url_for('find_events') }}">Wyszukaj wydarzenia</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="offers" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Oferty wymian</a>
+                    <div class="dropdown-menu" aria-labelledby="offers">
+                        <a class="dropdown-item" href="{{ url_for('my_offers') }}">Moje oferty</a>
+                        <a class="dropdown-item" href="{{ url_for('show_offers') }}">Dostępne oferty</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+
+        <ul class="navbar-nav">
+            {% if session['uid'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#">{{ session['email'] }}</a> {#  TODO edit profile #}
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('change_password') }}">Zmień hasło</a> {#  TODO edit profile #}
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Wyloguj</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Logowanie</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Rejestracja</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

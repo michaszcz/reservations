@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <section class="rwd-table mb-4">
+        <form method="get" action="" novalidate> {# todo novalidate #}
+            {% from "_formhelpers.html" import render_field %}
+
+            {{ render_field(form.title) }}
+            {{ render_field(form.owner) }}
+
+            <button type="submit" class="btn btn-primary">Znajdź</button>
+        </form>
+    </section>
+    <section class="rwd-table mb-4">
+        <h1>Wydarzenia</h1>
+        <table class="table">
+            <tr>
+                <th>Tytuł</th>
+                <th>Organizator</th>
+                <th>Czas rozpoczęcia</th>
+                <th>Ilość wolnych miejsc</th>
+                <th>Rezerwacja</th>
+            </tr>
+            {% for event in events %}
+                <tr>
+                    <td><a href="{{ url_for('event', event_id=event[0]) }}">{{ event[1] }}</a></td>
+                    <td>{{ event[2] }}</td>
+                    <td>{{ event[3] }}</td>
+                    <td>{{ event[4] }}</td>
+                    <td>
+                        {% if event[5] %}
+                            <a href="{{ url_for('delete_reservation', reservation_id=event[5]) }}?next={{ url_for('find_events') }}"
+                               class="btn btn-sm btn-outline-info delete-action"
+                               role="button">Odrezerwuj</a>
+                        {% elif event[6] %}
+                            <a href="{{ url_for('delete_reservation_queue', reservation_id=event[6]) }}?next={{ url_for('find_events') }}"
+                               class="btn btn-sm btn-outline-info delete-action"
+                               role="button">Opuść kolejkę</a>
+                        {% else %}
+                            <a href="{{ url_for('reserve', event_id=event[0]) }}?next={{ url_for('find_events') }}"
+                               class="btn btn-sm btn-outline-info"
+                               role="button">Zarezerwuj</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+{% endblock %}

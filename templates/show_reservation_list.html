@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <section class="mb-4">
+        <header>
+            <h1 class="float-left">Rezerwacje: {{ event.title }} </h1>
+            <span class="buttons-right">
+                <a href="{{ url_for('show_queue', event_id=event.id) }}"
+                   class="btn btn-sm btn-outline-info"
+                   role="button">Pokaż kolejkę</a>
+                <a href="{{ url_for('event', event_id=event.id) }}"
+                   class="btn btn-sm btn-outline-info"
+                   role="button">Powrót</a>
+            </span>
+        </header>
+        <table class="table">
+            <tr>
+                <th>Email rezerwującego</th>
+                <th>Usuń rezerwację</th>
+            </tr>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation[1] }}</td>
+                    <td>
+                        <a href="{{ url_for('delete_reservation', reservation_id=reservation[0]) }}?next={{ url_for('show_reservations', event_id=event.id) }}"
+                           class="btn btn-sm btn-outline-info delete-action"
+                           role="button">Usuń</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+{% endblock %}

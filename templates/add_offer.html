@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <section class="mb-4">
+        <header>
+            <h1 class="float-left">Wybierz rezerwację do wymiany: </h1>
+        </header>
+        <table class="table">
+            <tr>
+                <th>Tytuł</th>
+                <th>Organizator</th>
+                <th>Ilość miejsc</th>
+                <th>Wymień rezerwację</th>
+            </tr>
+            {% for reservation in reservations %}
+                <tr>
+                    <td><a href="{{ url_for('event', event_id=reservation['id_wydarzenia']) }}">{{ reservation['tytul_wydarzenia'] }}</a></td>
+                    <td>{{ reservation['email_organizatora'] }}</td>
+                    <td>{{ reservation['ilosc_miejsc'] }}</td>
+                    <td>
+                        <a href="{{ url_for('add_offer', event_id=event_id, event2_id=reservation['id_wydarzenia']) }}"
+                           class="btn btn-sm btn-outline-info"
+                           role="button">Wymień</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+{% endblock %}

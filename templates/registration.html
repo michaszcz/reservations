@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <form class="form-registration" method="post" action="" novalidate> {# todo novalidate #}
+        {% from "_formhelpers.html" import render_field %}
+        <h1 class="h3 mb-3 font-weight-normal">Zarejestruj się</h1>
+
+        {{ form.csrf_token }}
+        {{ render_field(form.email) }}
+        {{ render_field(form.password) }}
+        {{ render_field(form.password2) }}
+
+        <button type="submit" class="btn btn-primary">Wyślij</button>
+    </form>
+{% endblock %}

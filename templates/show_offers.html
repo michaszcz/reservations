@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <section class="mb-4">
+        <header>
+            <h1 class="float-left">Dostępne oferty:</h1>
+        </header>
+        <table class="table">
+            <tr>
+                <th>Co?</th>
+                <th>Za co?</th>
+                <th>Wymień</th>
+            </tr>
+            {% for offer in offers %}
+                <tr>
+                    <td><a href="{{ url_for('event', event_id=offer['event1_id']) }}">{{ offer['event1_title'] }}</a></td>
+                    <td><a href="{{ url_for('event', event_id=offer['event2_id']) }}">{{ offer['event2_title'] }}</a></td>
+                    <td>
+                        {% if offer['id_rezerwacji'] %}
+                        <a href="{{ url_for('offer_swap', offer_id=offer['id']) }}"
+                           class="btn btn-sm btn-outline-info"
+                           role="button">Wymień się</a>
+                        {% else %}
+                            Nie możliwe
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+{% endblock %}

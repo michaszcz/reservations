@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <section class="mb-4">
+        <header>
+            <h1 class="float-left">{{ details[2] }} </h1>
+            <span class="buttons-right">
+                {% if reservation %}
+                    <a href="{{ url_for('delete_reservation', reservation_id=reservation[0]) }}?next={{ url_for('event', event_id=details[0]) }}"
+                       class="btn btn-sm btn-outline-info delete-action"
+                       role="button">Odrezerwuj</a>
+                {% elif qreservation %}
+                    <a href="{{ url_for('delete_reservation_queue', reservation_id=qreservation['id']) }}?next={{ url_for('event', event_id=details[0]) }}"
+                       class="btn btn-sm btn-outline-info delete-action"
+                       role="button">Opuść kolejkę</a>
+                {% else %}
+                    <a href="{{ url_for('reserve', event_id=details[0]) }}?next={{ url_for('event', event_id=details[0]) }}"
+                       class="btn btn-sm btn-outline-info"
+                       role="button">Zarezerwuj</a>
+                {% endif %}
+                {% if not reservation %}
+                    <a href="{{ url_for('find_offer', event_id=details[0]) }}"
+                       class="btn btn-sm btn-outline-info"
+                       role="button">Zaproponuj wymianę</a>
+                {% endif %}
+            </span>
+        </header>
+        <table class="table">
+            <tr>
+                <td>Status</td>
+                {% if reservation %}
+                    <td>Zarezerwowano</td>
+                {% elif qreservation %}
+                    <td>Miejsce w kolejce: {{ qreservation['no_in_queue'] }}</td>
+                {% else %}
+                    <td>Brak rezerwacji</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>Tytuł</td>
+                <td>{{ details[2] }}</td>
+            </tr>
+            <tr>
+                <td>Miejsce</td>
+                <td>{{ details[3] }}</td>
+            </tr>
+            <tr>
+                <td>Opis</td>
+                <td>{{ details[4] }}</td>
+            </tr>
+            <tr>
+                <td>Czas rozpoczęcia</td>
+                <td>{{ details[5] }}</td>
+            </tr>
+            <tr>
+                <td>Czas zakończenia</td>
+                <td>{{ details[6] }}</td>
+            </tr>
+            <tr>
+                <td>Ilość miejsc</td>
+                <td>{{ details[7] }}</td>
+            </tr>
+            <tr>
+                <td>Ilość wolnych miejsc</td>
+                <td>{{ details[7] - details[8] }}</td>
+            </tr>
+            <tr>
+                <td>Ilość osób w kolejce</td>
+                <td>{{ details[9] }}</td>
+            </tr>
+        </table>
+    </section>
+{% endblock %}
