@@ -1,3 +1,6 @@
+# Prod
+config/settings.py
+
 # IDE
 .idea/
 

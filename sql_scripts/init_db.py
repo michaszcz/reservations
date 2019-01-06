@@ -1,5 +1,8 @@
 import subprocess
 import os
+import sys
+sys.path.append('./')
+
 from config.settings import DATABASE
 from sql_scripts.pop_test_data import pop_data
 
