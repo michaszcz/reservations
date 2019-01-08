@@ -28,7 +28,8 @@ class EventCreationForm(FlaskForm):
 
 class FindEventForm(FlaskForm):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, crsf_enabled=False, **kwargs)
+        kwargs['csrf_enabled'] = False
+        super().__init__(*args, **kwargs)
 
     title = StringField("Tytuł")
     owner = StringField("Organizator")
