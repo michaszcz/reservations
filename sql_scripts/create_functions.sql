@@ -206,7 +206,7 @@ select kolejka.id,
        wydarzenia.tytul,
        uzytkownicy.email,
        wydarzenia.ilosc_miejsc,
-       (select count(kolejka.id) from kolejka where id < id_uzytkownika)
+       (select count(k.id) from kolejka k where k.id < kolejka.id and k.id_wydarzenia = wydarzenia.id)
 from kolejka
        join wydarzenia on kolejka.id_wydarzenia = wydarzenia.id
        join uzytkownicy on wydarzenia.id_tworcy = uzytkownicy.id
