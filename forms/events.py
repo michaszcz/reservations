@@ -18,10 +18,16 @@ class EventCreationForm(FlaskForm):
                             default=30)
 
     def validate_start_timestamp(self, start_timestamp):
+        if start_timestamp.data is None:
+            raise ValidationError('Nie poprawny format daty')
         if start_timestamp.data < datetime.datetime.now():
             raise ValidationError('Czas rozpoczęcia musi mieć przyszłą datę')
 
     def validate_end_timestamp(self, end_timestamp):
+        if self.start_timestamp.data is None:
+            raise ValidationError('Nie poprawny format daty')
+        if end_timestamp.data is None:
+            raise ValidationError('Nie poprawny format daty')
         if end_timestamp.data < self.start_timestamp.data:
             raise ValidationError('Czas zakonczenia musi być późniejszy od czasu rozpoczęcia')
 
