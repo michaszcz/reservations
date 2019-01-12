@@ -259,7 +259,7 @@ execute procedure uzupelnij_z_kolejki_po_zwiekszeniu_liczby_miejsc();
 create function usun_oferty() returns trigger as
 $$
 begin
-  delete from oferty where id_wydarzenia_co = old.id_wydarzenia;
+  delete from oferty where id_wydarzenia_co = old.id_wydarzenia and id_wlasciciela = old.id_rezerwujacego;
   return new;
 end;
 $$ language plpgsql;
