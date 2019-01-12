@@ -12,7 +12,6 @@ def index():
     """
     W zależności czy użytkownik jest zalogowany przenosi go na odpowiednią
     podstronę.
-    :return:
     """
     if auth.is_authorized():
         return redirect(url_for('reservations'))
@@ -24,7 +23,6 @@ def index():
 def login():
     """
     Tworzy sesję i loguje użytkownika.
-    :return:
     """
     form = LoginForm(request.form)
     if request.method == 'POST':
@@ -43,7 +41,6 @@ def login():
 def logout():
     """
     Usuwa sesję i wylogowuje użytkownika.
-    :return:
     """
     auth.logout()
     flash('Wylogowano', 'success')
@@ -55,7 +52,6 @@ def logout():
 def register():
     """
     Obsługuje rejestrację użytkownika.
-    :return:
     """
     form = RegistrationForm(request.form)
     if request.method == 'POST':
@@ -73,6 +69,9 @@ def register():
 @app.route("/change_password", methods=('GET', 'POST'))
 @login_required
 def change_password():
+    """
+    Zmienia hasło użytkownika.
+    """
     form = ChangePasswordForm()
     if request.method == 'POST':
         if form.validate_on_submit():

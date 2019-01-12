@@ -11,7 +11,6 @@ from utils.decorators import login_required
 def show_offers():
     """
     Pokazuje listę dostępnych ofert dla użytkownika, ze szczegółami
-    :return:
     """
     with conn:
         with conn.cursor() as cur:
@@ -35,8 +34,9 @@ def show_offers():
 def swap_offer(offer_id):
     """
     Potwierdza wymianę podanej w argumencie oferty.
+
+    :type offer_id: int
     :param offer_id: id oferty
-    :return:
     """
     try:
         with conn:
@@ -53,8 +53,9 @@ def swap_offer(offer_id):
 def choose_swap_reservation(event_id):
     """
     Pozwala użytkownikowi wybrać rezerwacje, którą chce wymienić.
-    :param event_id:
-    :return:
+
+    :type event_id: int
+    :param event_id: id wydarzenia
     """
     with conn:
         with conn.cursor() as cur:
@@ -75,10 +76,13 @@ def choose_swap_reservation(event_id):
 def add_offer(event_id, event2_id):
     """
     Dodaje ofertę wymiany do bazy.
+
+    :type event_id: int
     :param event_id: wydarzenie które użytkownik chce się pozbyć, musi posiadać
                      do niego rezerwację
+
+    :type event2_id: int
     :param event2_id: wydarzenie które użytkownik chce dostać w zamian
-    :return:
     """
     try:
         with conn:
@@ -99,7 +103,6 @@ def add_offer(event_id, event2_id):
 def my_offers():
     """
     Wyświetla oferty stworzone przez użytkownika.
-    :return:
     """
     with conn:
         with conn.cursor() as cur:
@@ -122,8 +125,9 @@ def my_offers():
 def delete_offer(offer_id):
     """
     Usuwa ofertę użytkownika
-    :param offer_id:
-    :return:
+
+    :type offer_id: int
+    :param offer_id: id oferty
     """
     try:
         with conn:

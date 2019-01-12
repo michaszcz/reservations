@@ -11,8 +11,9 @@ from utils.decorators import login_required
 def reserve(event_id):
     """
     Rezerwuje wydarzenie podane w argumencie wydarzenie.
+
+    :type event_id: int
     :param event_id: id wydarzenia
-    :return:
     """
     try:
         with conn:
@@ -37,8 +38,9 @@ def show_reservations(event_id):
     """
     Pokazuje listę uczestników wydarzenia (rezerwacji). Działa tylko dla
     właściciela wydarzenia.
+
+    :type event_id: int
     :param event_id: id wydarzenia
-    :return:
     """
     try:
         with conn:
@@ -66,8 +68,9 @@ def show_queue(event_id):
     """
     Pokazuje listę osób chętnych do rezerwacji wydarzenia (kolejka). Działa
     tylko dla właściciela wydarzenia.
+
+    :type event_id: int
     :param event_id: id wydarzenia
-    :return:
     """
     try:
         with conn:
@@ -94,8 +97,9 @@ def show_queue(event_id):
 def delete_reservation(reservation_id):
     """
     Usuwa rezerwacje o danym id z bazy.
+
+    :type reservation_id: int
     :param reservation_id: id rezerwacji
-    :return:
     """
     try:
         with conn:
@@ -112,8 +116,9 @@ def delete_reservation(reservation_id):
 def delete_reservation_queue(reservation_id):
     """
     Usuwa rezerwację kolejki z bazy.
+
+    :type reservation_id: int
     :param reservation_id: id rezerwacji
-    :return:
     """
     try:
         with conn:
@@ -130,7 +135,6 @@ def delete_reservation_queue(reservation_id):
 def reservations():
     """
     Strona startowa zalogowanego użytkownika. Pokazuje wszystkie jego rezerwacje.
-    :return:
     """
     with conn:
         with conn.cursor() as cur:

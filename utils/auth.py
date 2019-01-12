@@ -7,6 +7,7 @@ from utils.security import check_password
 def is_authorized():
     """
     Sprawdza czy użytkownik jest zalogowany.
+
     :return: False/True
     """
     return 'uid' in session
@@ -15,8 +16,13 @@ def is_authorized():
 def login(email, password):
     """
     Sprawdza poprawność danych i loguje użytkownika
+
+    :type email: str
     :param email: email
+
+    :type password: str
     :param password: hasło
+
     :return: Zwraca True gdy użytkownik podał poprawne dane,
              w przeciwnym wypadku False
     """
@@ -36,7 +42,6 @@ def login(email, password):
 def logout():
     """
     Wylogowuje użytkownika.
-    :return:
     """
     try:
         del session['uid']

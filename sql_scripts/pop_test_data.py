@@ -5,27 +5,27 @@ from storage import conn
 
 
 def pop_data():
-    User.create("creator@admin.com", "123")
-    User.create("admin@admin.com", "123")
-    User.create("user@admin.com", "123")
-    User.create("user4@admin.com", "123")
-    uid = User.get("creator@admin.com")
-    uid2 = User.get("admin@admin.com")
-    uid3 = User.get("user@admin.com")
-    uid4 = User.get("user4@admin.com")
-    Event.create(uid, "Example event #1", "event description", "heaven",
-                 datetime.datetime.now() + datetime.timedelta(days=1),
-                 datetime.datetime.now() + datetime.timedelta(days=2), 1)
-    Event.create(uid, "Example event #2", "event description2", "hell",
-                 datetime.datetime.now() + datetime.timedelta(days=2),
-                 datetime.datetime.now() + datetime.timedelta(days=3), 1)
+    User.create("profesor@email.com", "tajne123")
+    User.create("michal@email.com", "tajne123")
+    User.create("jan@email.com", "tajne123")
+    User.create("uczen@email.com", "tajne123")
+    uid = User.get("profesor@email.com")
+    uid2 = User.get("michal@email.com")
+    uid3 = User.get("jan@email.com")
+    uid4 = User.get("uczen@email.com")
+    Event.create(uid, "Bazy danych I", "event description", "D10",
+                 datetime.datetime.now() + datetime.timedelta(days=10),
+                 datetime.datetime.now() + datetime.timedelta(days=12), 1)
+    Event.create(uid, "Bazy danych II", "event description2", "D10",
+                 datetime.datetime.now() + datetime.timedelta(days=12),
+                 datetime.datetime.now() + datetime.timedelta(days=13), 2)
     with conn:
         with conn.cursor() as cur:
             cur.execute(
-                """select id from wydarzenia where id_tworcy=%s and tytul=%s""", (uid, "Example event #1"))
+                """select id from wydarzenia where id_tworcy=%s and tytul=%s""", (uid, "Bazy danych I"))
             event_id1 = cur.fetchone()
             cur.execute(
-                """select id from wydarzenia where id_tworcy=%s and tytul=%s""", (uid, "Example event #2"))
+                """select id from wydarzenia where id_tworcy=%s and tytul=%s""", (uid, "Bazy danych II"))
             event_id2 = cur.fetchone()
     Reservation.create(uid2, event_id1)  # rvs
     Reservation.create(uid3, event_id1)  # queue

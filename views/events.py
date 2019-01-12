@@ -25,7 +25,6 @@ def _event_check_title(form, evt_id=None):
 def create_event():
     """
     Udostępnia formularz umożliwiający stworzenie nowego wydarzenia.
-    :return:
     """
     form = EventCreationForm(request.form)
     if request.method == 'POST':
@@ -46,8 +45,9 @@ def create_event():
 def edit_event(event_id):
     """
     Udostępnia formularz do edycji wydarzenia.
+
+    :type event_id: int
     :param event_id: id wydarzenia do edycji
-    :return:
     """
     evt = Event.get(event_id)
     if evt is None or evt.owner != session['uid']:
@@ -74,8 +74,9 @@ def edit_event(event_id):
 def delete_event(event_id):
     """
     Usuwa wydarzenie z bazy.
+
+    :type event_id: int
     :param event_id: id wydarzenia do usunięcia
-    :return:
     """
     try:
         with conn:
@@ -93,7 +94,6 @@ def delete_event(event_id):
 def my_events():
     """
     Wyświetla wszystkie wydarzenie utworzone przez użytkownika.
-    :return:
     """
     with conn:
         with conn.cursor() as cur:
@@ -112,8 +112,9 @@ def event(event_id):
     """
     Wyświetla szczegółowe wiadomości o danym wydarzeniu. Szczegóły wydarzenia
     zależą od tego czy użytkownik jest właścicielem wydarznie, czy nie.
+
+    :type event_id: int
     :param event_id: id wydarzenia
-    :return:
     """
     evt = Event.get(event_id)
     if evt is None:
@@ -149,7 +150,6 @@ def event(event_id):
 def find_events():
     """
     Wyświetla wszystkie dostępne wydarzenia oraz formularz filtrujący.
-    :return:
     """
     form = FindEventForm(request.args)
     events = []
