@@ -3,6 +3,7 @@ config/settings.py
 
 # IDE
 .idea/
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

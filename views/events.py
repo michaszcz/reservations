@@ -1,3 +1,4 @@
+import psycopg2
 from flask import render_template, request, redirect, url_for, flash, session
 
 from app import app
@@ -7,7 +8,7 @@ from storage import conn
 from utils.decorators import login_required
 
 
-def event_check_title(form, evt_id=None):
+def _event_check_title(form, evt_id=None):
     with conn:
         with conn.cursor() as cur:
             cur.execute("""select id from wydarzenia where id_tworcy=%s and tytul=%s""",
@@ -22,9 +23,13 @@ def event_check_title(form, evt_id=None):
 @app.route("/events/create", methods=('GET', 'POST'))
 @login_required
 def create_event():
+    """
+    Udostępnia formularz umożliwiający stworzenie nowego wydarzenia.
+    :return:
+    """
     form = EventCreationForm(request.form)
     if request.method == 'POST':
-        if form.validate_on_submit() and event_check_title(form):
+        if form.validate_on_submit() and _event_check_title(form):
             if Event.create(session['uid'], form.title.data, form.description.data, form.place.data,
                             form.start_timestamp.data, form.end_timestamp.data, form.capacity.data):
                 flash('Wydarzenie zostało utworzone', 'success')
@@ -39,6 +44,11 @@ def create_event():
 @app.route("/event/<event_id>/edit", methods=('GET', 'POST'))
 @login_required
 def edit_event(event_id):
+    """
+    Udostępnia formularz do edycji wydarzenia.
+    :param event_id: id wydarzenia do edycji
+    :return:
+    """
     evt = Event.get(event_id)
     if evt is None or evt.owner != session['uid']:
         flash('To wydarzenie nie istnieje lub nie jesteś jego właścicielem', 'danger')
@@ -47,7 +57,7 @@ def edit_event(event_id):
                              start_timestamp=evt.start_timestamp, end_timestamp=evt.end_timestamp,
                              capacity=evt.capacity)
     if request.method == 'POST':
-        if form.validate_on_submit() and event_check_title(form, evt.id):
+        if form.validate_on_submit() and _event_check_title(form, evt.id):
             if Event.update(evt.id, form.title.data, form.description.data, form.place.data,
                             form.start_timestamp.data, form.end_timestamp.data, form.capacity.data):
                 flash('Wydarzenie zostało zmodyfikowane', 'success')
@@ -62,21 +72,29 @@ def edit_event(event_id):
 @app.route("/event/<event_id>/delete")  # TODO No csrf - vulnerability exists
 @login_required
 def delete_event(event_id):
-    evt = Event.get(event_id)
-    if evt is None or evt.owner != session['uid']:
-        flash('To wydarzenie nie istnieje lub nie jesteś jego właścicielem', 'danger')
-        return redirect(url_for('my_events'))
-    with conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """delete from wydarzenia where id=%s""", (event_id,))
-    flash('Wydarzenie zostało usunięte', 'success')
+    """
+    Usuwa wydarzenie z bazy.
+    :param event_id: id wydarzenia do usunięcia
+    :return:
+    """
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""select usun_wydarzenie(%s, %s)""", (session['uid'], event_id))
+        flash('Wydarzenie zostało usunięte', 'success')
+    except psycopg2.InternalError as ex:
+        flash(ex.diag.message_primary, 'danger')
+
     return redirect(url_for('my_events'))
 
 
 @app.route("/my-events")
 @login_required
 def my_events():
+    """
+    Wyświetla wszystkie wydarzenie utworzone przez użytkownika.
+    :return:
+    """
     with conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -91,6 +109,12 @@ def my_events():
 @app.route("/event/<event_id>")
 @login_required
 def event(event_id):
+    """
+    Wyświetla szczegółowe wiadomości o danym wydarzeniu. Szczegóły wydarzenia
+    zależą od tego czy użytkownik jest właścicielem wydarznie, czy nie.
+    :param event_id: id wydarzenia
+    :return:
+    """
     evt = Event.get(event_id)
     if evt is None:
         flash('To wydarzenie nie istnieje', 'danger')
@@ -123,6 +147,10 @@ def event(event_id):
 @app.route("/find_events")
 @login_required
 def find_events():
+    """
+    Wyświetla wszystkie dostępne wydarzenia oraz formularz filtrujący.
+    :return:
+    """
     form = FindEventForm(request.args)
     events = []
     if form.validate():

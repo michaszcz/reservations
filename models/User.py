@@ -10,12 +10,6 @@ class User:
         self.uid = uid
         self.email = email
 
-    def get_reservations(self):
-        with conn:
-            with conn.cursor() as cur:
-                cur.execute("""select * from rezerwacje where id_rezerwujacego=%s""", (self.uid,))
-                return cur.fetchone()
-
     @staticmethod
     def get(email):
         with conn:

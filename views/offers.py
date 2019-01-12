@@ -2,7 +2,6 @@ import psycopg2
 from flask import render_template, session, flash, redirect, url_for
 
 from app import app
-from models import Offer, Event
 from storage import conn
 from utils.decorators import login_required
 
@@ -10,6 +9,10 @@ from utils.decorators import login_required
 @app.route("/offers")
 @login_required
 def show_offers():
+    """
+    Pokazuje listę dostępnych ofert dla użytkownika, ze szczegółami
+    :return:
+    """
     with conn:
         with conn.cursor() as cur:
             cur.execute("""select lista_ofert.*, rezerwacje.id from lista_ofert
@@ -29,33 +32,30 @@ def show_offers():
 
 @app.route("/offer/<offer_id>/swap")
 @login_required
-def offer_swap(offer_id):
-    offer = Offer.get(offer_id)
-    if offer is None:
-        flash('To oferta nie istnieje', 'danger')
-        return redirect(url_for('show_offers'))
-    if offer.owner_id == session['uid']:
-        flash('Nie możesz wymieniać się sam ze sobą', 'warning')
-        return redirect(url_for('show_offers'))
+def swap_offer(offer_id):
+    """
+    Potwierdza wymianę podanej w argumencie oferty.
+    :param offer_id: id oferty
+    :return:
+    """
     try:
         with conn:
             with conn.cursor() as cur:
-                cur.execute("""select wymien(%s, %s)""", (offer_id, session['uid']))
+                cur.execute("""select wymien(%s, %s)""", (session['uid'], offer_id))
         flash('Zamiana przebiegła pomyślnie', 'success')
-    except psycopg2.InternalError as e:
-        print(e)
-        flash('Nie można wykonać zamiany', 'danger')
+    except psycopg2.InternalError as ex:
+        flash(ex.diag.message_primary, 'danger')
     return redirect(url_for('show_offers'))
 
 
 @app.route("/event/<event_id>/add_offer")
 @login_required
-def find_offer(event_id):
-    evt = Event.get(event_id)
-    if evt is None or evt.owner == session['uid']:
-        flash('To wydarzenie nie istnieje lub jesteś jego właścicielem', 'danger')
-        return redirect(url_for('my_events'))
-
+def choose_swap_reservation(event_id):
+    """
+    Pozwala użytkownikowi wybrać rezerwacje, którą chce wymienić.
+    :param event_id:
+    :return:
+    """
     with conn:
         with conn.cursor() as cur:
             cur.execute("""select * from pokaz_rezerwacje_uzytkownika(%s)""", (session['uid'],))
@@ -73,37 +73,34 @@ def find_offer(event_id):
 @app.route("/event/<event_id>/add_offer/<event2_id>")
 @login_required
 def add_offer(event_id, event2_id):
-    evt = Event.get(event_id)
-    if evt is None or evt.owner == session['uid']:
-        flash('To wydarzenie nie istnieje lub jesteś jego właścicielem', 'danger')
-        return redirect(url_for('my_events'))
-
-    evt2 = Event.get(event2_id)
-    if evt2 is None or evt2.owner == session['uid']:
-        flash('To wydarzenie nie istnieje lub jesteś jego właścicielem', 'danger')
-        return redirect(url_for('my_events'))
-
-    with conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """select id from oferty where id_wlasciciela = %s 
-                and id_wydarzenia_co = %s and id_wydarzenia_za_co = %s""",
-                (session['uid'], event_id, event2_id))
-            if cur.fetchone() is not None:
-                flash('Ta oferta została już dodana', 'warning')
-                return redirect(url_for('my_offers'))
-
-    offer = Offer.create(session['uid'], event_id, event2_id)
-    if offer:
+    """
+    Dodaje ofertę wymiany do bazy.
+    :param event_id: wydarzenie które użytkownik chce się pozbyć, musi posiadać
+                     do niego rezerwację
+    :param event2_id: wydarzenie które użytkownik chce dostać w zamian
+    :return:
+    """
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""select dodaj_oferte(%s, %s, %s)""",
+                            (session['uid'], event_id, event2_id))
         flash('Oferta została dodana', 'success')
-    else:
+    except psycopg2.InternalError as ex:
+        flash(ex.diag.message_primary, 'danger')
+    except psycopg2.IntegrityError:
         flash('Nie możesz dodać tej oferty', 'danger')
+
     return redirect(url_for('my_offers'))
 
 
 @app.route("/my_offers")
 @login_required
 def my_offers():
+    """
+    Wyświetla oferty stworzone przez użytkownika.
+    :return:
+    """
     with conn:
         with conn.cursor() as cur:
             cur.execute("""select lista_ofert.* from lista_ofert
@@ -123,14 +120,17 @@ def my_offers():
 @app.route("/offer/<offer_id>/delete")
 @login_required
 def delete_offer(offer_id):
-    offer = Offer.get(offer_id)
-    # todo try
-
-    if offer is None or session['uid'] != offer.owner_id:
-        flash('Ta oferta nie istnieje lub nie jesteś jej właścicielem', 'danger')
-        return redirect(url_for('my_offers'))
-    with conn:
-        with conn.cursor() as cur:
-            cur.execute("""delete from oferty where id=%s""", (offer_id,))
-    flash('Oferta została usunięta', 'success')
+    """
+    Usuwa ofertę użytkownika
+    :param offer_id:
+    :return:
+    """
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""select usun_oferte(%s, %s)""",
+                            (session['uid'], offer_id))
+        flash('Oferta została usunięta', 'success')
+    except psycopg2.InternalError as ex:
+        flash(ex.diag.message_primary, 'danger')
     return redirect(url_for('my_offers'))

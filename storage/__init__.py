@@ -27,5 +27,9 @@ class ConnProxy:
     def __exit__(self, *args, **kwargs):
         return self._conn.__exit__(*args, **kwargs)
 
+    @property
+    def notices(self):
+        return self._conn.notices
+
 
 conn = ConnProxy()

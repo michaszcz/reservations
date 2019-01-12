@@ -9,6 +9,11 @@ from utils.decorators import login_required, nologin_required
 
 @app.route("/")
 def index():
+    """
+    W zależności czy użytkownik jest zalogowany przenosi go na odpowiednią
+    podstronę.
+    :return:
+    """
     if auth.is_authorized():
         return redirect(url_for('reservations'))
     return redirect(url_for('login'))
@@ -17,6 +22,10 @@ def index():
 @app.route("/login", methods=('GET', 'POST'))
 @nologin_required
 def login():
+    """
+    Tworzy sesję i loguje użytkownika.
+    :return:
+    """
     form = LoginForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -32,6 +41,10 @@ def login():
 @app.route("/logout")
 @login_required
 def logout():
+    """
+    Usuwa sesję i wylogowuje użytkownika.
+    :return:
+    """
     auth.logout()
     flash('Wylogowano', 'success')
     return redirect(url_for('login'))
@@ -40,6 +53,10 @@ def logout():
 @app.route("/registration", methods=('GET', 'POST'))
 @nologin_required
 def register():
+    """
+    Obsługuje rejestrację użytkownika.
+    :return:
+    """
     form = RegistrationForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():

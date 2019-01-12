@@ -3,12 +3,12 @@
 {% block main %}
     <section class="mb-4">
         <header>
-            <h1 class="float-left">Rezerwacje: {{ event.title }} </h1>
+            <h1 class="float-left">Rezerwacje: {{ event['title'] }} </h1>
             <span class="buttons-right">
-                <a href="{{ url_for('show_queue', event_id=event.id) }}"
+                <a href="{{ url_for('show_queue', event_id=event['event_id']) }}"
                    class="btn btn-sm btn-outline-info"
                    role="button">Pokaż kolejkę</a>
-                <a href="{{ url_for('event', event_id=event.id) }}"
+                <a href="{{ url_for('event', event_id=event['event_id']) }}"
                    class="btn btn-sm btn-outline-info"
                    role="button">Powrót</a>
             </span>
@@ -20,9 +20,9 @@
             </tr>
             {% for reservation in reservations %}
                 <tr>
-                    <td>{{ reservation[1] }}</td>
+                    <td>{{ reservation['email'] }}</td>
                     <td>
-                        <a href="{{ url_for('delete_reservation', reservation_id=reservation[0]) }}?next={{ url_for('show_reservations', event_id=event.id) }}"
+                        <a href="{{ url_for('delete_reservation', reservation_id=reservation['reservation_id']) }}?next={{ url_for('show_reservations', event_id=event['event_id']) }}"
                            class="btn btn-sm btn-outline-info delete-action"
                            role="button">Usuń</a>
                     </td>

@@ -17,7 +17,7 @@
                     <td><a href="{{ url_for('event', event_id=offer['event2_id']) }}">{{ offer['event2_title'] }}</a></td>
                     <td>
                         {% if offer['id_rezerwacji'] %}
-                        <a href="{{ url_for('offer_swap', offer_id=offer['id']) }}"
+                        <a href="{{ url_for('swap_offer', offer_id=offer['id']) }}"
                            class="btn btn-sm btn-outline-info"
                            role="button">Wymień się</a>
                         {% else %}

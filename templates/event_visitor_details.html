@@ -19,7 +19,7 @@
                        role="button">Zarezerwuj</a>
                 {% endif %}
                 {% if not reservation %}
-                    <a href="{{ url_for('find_offer', event_id=details[0]) }}"
+                    <a href="{{ url_for('choose_swap_reservation', event_id=details[0]) }}"
                        class="btn btn-sm btn-outline-info"
                        role="button">Zaproponuj wymianę</a>
                 {% endif %}

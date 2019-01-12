@@ -8,9 +8,11 @@ def pop_data():
     User.create("creator@admin.com", "123")
     User.create("admin@admin.com", "123")
     User.create("user@admin.com", "123")
+    User.create("user4@admin.com", "123")
     uid = User.get("creator@admin.com")
     uid2 = User.get("admin@admin.com")
     uid3 = User.get("user@admin.com")
+    uid4 = User.get("user4@admin.com")
     Event.create(uid, "Example event #1", "event description", "heaven",
                  datetime.datetime.now() + datetime.timedelta(days=1),
                  datetime.datetime.now() + datetime.timedelta(days=2), 1)
@@ -28,6 +30,7 @@ def pop_data():
     Reservation.create(uid2, event_id1)  # rvs
     Reservation.create(uid3, event_id1)  # queue
     Reservation.create(uid3, event_id2)  # rvs
+    Reservation.create(uid4, event_id1)  # queue
     with conn:
         with conn.cursor() as cur:
             cur.execute(
